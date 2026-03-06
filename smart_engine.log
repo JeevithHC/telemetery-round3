@@ -1,0 +1,187 @@
+2026-03-07 00:52:27  INFO      smart_engine.scheduler — ============================================================
+2026-03-07 00:52:27  INFO      smart_engine.scheduler —   VehicleGuard Smart Engine — Starting Up
+2026-03-07 00:52:27  INFO      smart_engine.scheduler —   2026-03-06 19:22:27 UTC
+2026-03-07 00:52:27  INFO      smart_engine.scheduler — ============================================================
+2026-03-07 00:52:27  INFO      apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-03-07 00:52:27  INFO      smart_engine.scheduler — [Scheduler] Job registered: odometer_check (cron hour=* minute=0)
+2026-03-07 00:52:27  INFO      apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-03-07 00:52:27  INFO      smart_engine.scheduler — [Scheduler] Job registered: telemetry_listener (interval=30s)
+2026-03-07 00:52:27  INFO      apscheduler.scheduler — Added job "Odometer vs Maintenance Schedule" to job store "default"
+2026-03-07 00:52:27  INFO      apscheduler.scheduler — Added job "Telemetry P1_WARNING Listener" to job store "default"
+2026-03-07 00:52:27  INFO      apscheduler.scheduler — Scheduler started
+2026-03-07 00:52:27  INFO      smart_engine.scheduler — [Scheduler] Both jobs started. Running… (Ctrl+C to stop)
+2026-03-07 00:52:27  INFO      smart_engine.scheduler — [Scheduler] Running initial odometer check on startup…
+2026-03-07 00:52:27  INFO      smart_engine.scheduler — ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2026-03-07 00:52:27  INFO      smart_engine.scheduler — [Job:OdometerCheck] STARTING
+2026-03-07 00:52:27  INFO      pymongo.serverSelection — {"message": "Waiting for suitable server to become available", "selector": "<function writable_server_selector at 0x0000020EF917A480>", "operation": "createIndexes", "topologyDescription": "<TopologyDescription id: 69ab29734cdb18212e4ec421, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None>]>", "clientId": {"$oid": "69ab29734cdb18212e4ec421"}, "remainingTimeMS": 30}
+2026-03-07 00:52:27  ERROR     smart_engine.scheduler — [Job:OdometerCheck] UNHANDLED ERROR: Index build failed: 6e337b1d-82f7-4d8a-9010-18b0975f84ab: Collection vehicle_telemetry.maintenance_schedule ( c0843705-e5e7-452b-b1c6-b2ebb2f9c9a1 ) :: caused by :: E11000 duplicate key error collection: vehicle_telemetry.maintenance_schedule index: vehicle_task_unique dup key: { vehicle_id: null, task_id: null }, full error: {'ok': 0.0, 'errmsg': 'Index build failed: 6e337b1d-82f7-4d8a-9010-18b0975f84ab: Collection vehicle_telemetry.maintenance_schedule ( c0843705-e5e7-452b-b1c6-b2ebb2f9c9a1 ) :: caused by :: E11000 duplicate key error collection: vehicle_telemetry.maintenance_schedule index: vehicle_task_unique dup key: { vehicle_id: null, task_id: null }', 'code': 11000, 'codeName': 'DuplicateKey', 'keyPattern': {'vehicle_id': 1, 'task_id': 1}, 'keyValue': {'vehicle_id': None, 'task_id': None}}
+Traceback (most recent call last):
+  File "D:\telemetry\round 3\smart_engine\scheduler.py", line 60, in job_odometer_check
+    summary = run_odometer_check()
+              ^^^^^^^^^^^^^^^^^^^^
+  File "D:\telemetry\round 3\smart_engine\odometer_checker.py", line 108, in run_odometer_check
+    vehicles          = get_all_vehicles()
+                        ^^^^^^^^^^^^^^^^^^
+  File "D:\telemetry\round 3\smart_engine\engine_db.py", line 60, in get_all_vehicles
+    vehicles = list(get_db().vehicles.find())
+                    ^^^^^^^^
+  File "D:\telemetry\round 3\smart_engine\engine_db.py", line 23, in get_db
+    _ensure_indexes(_db)
+  File "D:\telemetry\round 3\smart_engine\engine_db.py", line 41, in _ensure_indexes
+    db.maintenance_schedule.create_index(
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\collection.py", line 2120, in create_index
+    return self.__create_indexes([index], session, **cmd_options)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\_csot.py", line 108, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\collection.py", line 1994, in __create_indexes
+    self._command(
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\collection.py", line 301, in _command
+    return conn.command(
+           ^^^^^^^^^^^^^
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\helpers.py", line 327, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\pool.py", line 985, in command
+    return command(
+           ^^^^^^^^
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\network.py", line 212, in command
+    helpers._check_command_response(
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\helpers.py", line 227, in _check_command_response
+    raise DuplicateKeyError(errmsg, code, response, max_wire_version)
+pymongo.errors.DuplicateKeyError: Index build failed: 6e337b1d-82f7-4d8a-9010-18b0975f84ab: Collection vehicle_telemetry.maintenance_schedule ( c0843705-e5e7-452b-b1c6-b2ebb2f9c9a1 ) :: caused by :: E11000 duplicate key error collection: vehicle_telemetry.maintenance_schedule index: vehicle_task_unique dup key: { vehicle_id: null, task_id: null }, full error: {'ok': 0.0, 'errmsg': 'Index build failed: 6e337b1d-82f7-4d8a-9010-18b0975f84ab: Collection vehicle_telemetry.maintenance_schedule ( c0843705-e5e7-452b-b1c6-b2ebb2f9c9a1 ) :: caused by :: E11000 duplicate key error collection: vehicle_telemetry.maintenance_schedule index: vehicle_task_unique dup key: { vehicle_id: null, task_id: null }', 'code': 11000, 'codeName': 'DuplicateKey', 'keyPattern': {'vehicle_id': 1, 'task_id': 1}, 'keyValue': {'vehicle_id': None, 'task_id': None}}
+2026-03-07 00:56:22  INFO      smart_engine.scheduler — ============================================================
+2026-03-07 00:56:22  INFO      smart_engine.scheduler —   VehicleGuard Smart Engine — Starting Up
+2026-03-07 00:56:22  INFO      smart_engine.scheduler —   2026-03-06 19:26:22 UTC
+2026-03-07 00:56:22  INFO      smart_engine.scheduler — ============================================================
+2026-03-07 00:56:22  INFO      apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-03-07 00:56:22  INFO      smart_engine.scheduler — [Scheduler] Job registered: odometer_check (cron hour=* minute=0)
+2026-03-07 00:56:22  INFO      apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-03-07 00:56:22  INFO      smart_engine.scheduler — [Scheduler] Job registered: telemetry_listener (interval=30s)
+2026-03-07 00:56:22  INFO      apscheduler.scheduler — Added job "Odometer vs Maintenance Schedule" to job store "default"
+2026-03-07 00:56:22  INFO      apscheduler.scheduler — Added job "Telemetry P1_WARNING Listener" to job store "default"
+2026-03-07 00:56:22  INFO      apscheduler.scheduler — Scheduler started
+2026-03-07 00:56:22  INFO      smart_engine.scheduler — [Scheduler] Both jobs started. Running… (Ctrl+C to stop)
+2026-03-07 00:56:22  INFO      smart_engine.scheduler — [Scheduler] Running initial odometer check on startup…
+2026-03-07 00:56:22  INFO      smart_engine.scheduler — ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2026-03-07 00:56:22  INFO      smart_engine.scheduler — [Job:OdometerCheck] STARTING
+2026-03-07 00:56:22  INFO      pymongo.serverSelection — {"message": "Waiting for suitable server to become available", "selector": "<function writable_server_selector at 0x00000223FFB5A200>", "operation": "createIndexes", "topologyDescription": "<TopologyDescription id: 69ab2a5eb9ea0091c5fb010b, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None>]>", "clientId": {"$oid": "69ab2a5eb9ea0091c5fb010b"}, "remainingTimeMS": 30}
+2026-03-07 00:56:22  ERROR     smart_engine.scheduler — [Job:OdometerCheck] UNHANDLED ERROR: Index build failed: 430f1660-6915-4465-b82a-7c1e6f48892c: Collection vehicle_telemetry.maintenance_schedule ( c0843705-e5e7-452b-b1c6-b2ebb2f9c9a1 ) :: caused by :: E11000 duplicate key error collection: vehicle_telemetry.maintenance_schedule index: vehicle_task_unique dup key: { vehicle_id: null, task_id: null }, full error: {'ok': 0.0, 'errmsg': 'Index build failed: 430f1660-6915-4465-b82a-7c1e6f48892c: Collection vehicle_telemetry.maintenance_schedule ( c0843705-e5e7-452b-b1c6-b2ebb2f9c9a1 ) :: caused by :: E11000 duplicate key error collection: vehicle_telemetry.maintenance_schedule index: vehicle_task_unique dup key: { vehicle_id: null, task_id: null }', 'code': 11000, 'codeName': 'DuplicateKey', 'keyPattern': {'vehicle_id': 1, 'task_id': 1}, 'keyValue': {'vehicle_id': None, 'task_id': None}}
+Traceback (most recent call last):
+  File "D:\telemetry\round 3\smart_engine\scheduler.py", line 60, in job_odometer_check
+    summary = run_odometer_check()
+              ^^^^^^^^^^^^^^^^^^^^
+  File "D:\telemetry\round 3\smart_engine\odometer_checker.py", line 108, in run_odometer_check
+    vehicles          = get_all_vehicles()
+                        ^^^^^^^^^^^^^^^^^^
+  File "D:\telemetry\round 3\smart_engine\engine_db.py", line 60, in get_all_vehicles
+    vehicles = list(get_db().vehicles.find())
+                    ^^^^^^^^
+  File "D:\telemetry\round 3\smart_engine\engine_db.py", line 23, in get_db
+    _ensure_indexes(_db)
+  File "D:\telemetry\round 3\smart_engine\engine_db.py", line 41, in _ensure_indexes
+    db.maintenance_schedule.create_index(
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\collection.py", line 2120, in create_index
+    return self.__create_indexes([index], session, **cmd_options)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\_csot.py", line 108, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\collection.py", line 1994, in __create_indexes
+    self._command(
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\collection.py", line 301, in _command
+    return conn.command(
+           ^^^^^^^^^^^^^
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\helpers.py", line 327, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\pool.py", line 985, in command
+    return command(
+           ^^^^^^^^
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\network.py", line 212, in command
+    helpers._check_command_response(
+  File "C:\Users\JOYSTER PINTO\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymongo\helpers.py", line 227, in _check_command_response
+    raise DuplicateKeyError(errmsg, code, response, max_wire_version)
+pymongo.errors.DuplicateKeyError: Index build failed: 430f1660-6915-4465-b82a-7c1e6f48892c: Collection vehicle_telemetry.maintenance_schedule ( c0843705-e5e7-452b-b1c6-b2ebb2f9c9a1 ) :: caused by :: E11000 duplicate key error collection: vehicle_telemetry.maintenance_schedule index: vehicle_task_unique dup key: { vehicle_id: null, task_id: null }, full error: {'ok': 0.0, 'errmsg': 'Index build failed: 430f1660-6915-4465-b82a-7c1e6f48892c: Collection vehicle_telemetry.maintenance_schedule ( c0843705-e5e7-452b-b1c6-b2ebb2f9c9a1 ) :: caused by :: E11000 duplicate key error collection: vehicle_telemetry.maintenance_schedule index: vehicle_task_unique dup key: { vehicle_id: null, task_id: null }', 'code': 11000, 'codeName': 'DuplicateKey', 'keyPattern': {'vehicle_id': 1, 'task_id': 1}, 'keyValue': {'vehicle_id': None, 'task_id': None}}
+2026-03-07 00:56:52  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:27:22 UTC)" (scheduled at 2026-03-06 19:26:52.553934+00:00)
+2026-03-07 00:56:52  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:27:22 UTC)" executed successfully
+2026-03-07 00:57:22  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:27:52 UTC)" (scheduled at 2026-03-06 19:27:22.553934+00:00)
+2026-03-07 00:57:22  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:27:52 UTC)" executed successfully
+2026-03-07 00:57:52  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:28:22 UTC)" (scheduled at 2026-03-06 19:27:52.553934+00:00)
+2026-03-07 00:57:52  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:28:22 UTC)" executed successfully
+2026-03-07 00:58:22  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:28:52 UTC)" (scheduled at 2026-03-06 19:28:22.553934+00:00)
+2026-03-07 00:58:22  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:28:52 UTC)" executed successfully
+2026-03-07 00:58:52  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:29:22 UTC)" (scheduled at 2026-03-06 19:28:52.553934+00:00)
+2026-03-07 00:58:52  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:29:22 UTC)" executed successfully
+2026-03-07 00:59:22  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:29:52 UTC)" (scheduled at 2026-03-06 19:29:22.553934+00:00)
+2026-03-07 00:59:22  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:29:52 UTC)" executed successfully
+2026-03-07 00:59:28  INFO      smart_engine.scheduler — [Scheduler] Signal 2 received — shutting down gracefully…
+2026-03-07 00:59:28  INFO      apscheduler.scheduler — Scheduler has been shut down
+2026-03-07 00:59:28  INFO      smart_engine.scheduler — [Scheduler] Stopped.
+2026-03-07 01:08:59  INFO      smart_engine.scheduler — ============================================================
+2026-03-07 01:08:59  INFO      smart_engine.scheduler —   VehicleGuard Smart Engine — Starting Up
+2026-03-07 01:08:59  INFO      smart_engine.scheduler —   2026-03-06 19:38:59 UTC
+2026-03-07 01:08:59  INFO      smart_engine.scheduler — ============================================================
+2026-03-07 01:08:59  INFO      apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-03-07 01:08:59  INFO      smart_engine.scheduler — [Scheduler] Job registered: odometer_check (cron hour=* minute=0)
+2026-03-07 01:08:59  INFO      apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-03-07 01:08:59  INFO      smart_engine.scheduler — [Scheduler] Job registered: telemetry_listener (interval=30s)
+2026-03-07 01:08:59  INFO      apscheduler.scheduler — Added job "Odometer vs Maintenance Schedule" to job store "default"
+2026-03-07 01:08:59  INFO      apscheduler.scheduler — Added job "Telemetry P1_WARNING Listener" to job store "default"
+2026-03-07 01:08:59  INFO      apscheduler.scheduler — Scheduler started
+2026-03-07 01:08:59  INFO      smart_engine.scheduler — [Scheduler] Both jobs started. Running… (Ctrl+C to stop)
+2026-03-07 01:08:59  INFO      smart_engine.scheduler — [Scheduler] Running initial odometer check on startup…
+2026-03-07 01:08:59  INFO      smart_engine.scheduler — ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2026-03-07 01:08:59  INFO      smart_engine.scheduler — [Job:OdometerCheck] STARTING
+2026-03-07 01:08:59  INFO      pymongo.serverSelection — {"message": "Waiting for suitable server to become available", "selector": "<function writable_server_selector at 0x0000023E30F4A3E0>", "operation": "createIndexes", "topologyDescription": "<TopologyDescription id: 69ab2d532c13d3c33d2bb289, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None>]>", "clientId": {"$oid": "69ab2d532c13d3c33d2bb289"}, "remainingTimeMS": 30}
+2026-03-07 01:08:59  INFO      smart_engine.odometer — [OdometerCheck] Starting — 0 vehicle(s) to check.
+2026-03-07 01:08:59  INFO      smart_engine.odometer — [OdometerCheck] Done in 0.1s — 0 ticket(s) created, 0 skipped, 0 error(s).
+2026-03-07 01:08:59  INFO      smart_engine.scheduler — [Job:OdometerCheck] DONE — 0 ticket(s) created, 0 duplicate(s) skipped, 0 error(s), took 0.05s
+2026-03-07 01:09:29  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:39:59 UTC)" (scheduled at 2026-03-06 19:39:29.742486+00:00)
+2026-03-07 01:09:29  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:39:59 UTC)" executed successfully
+2026-03-07 01:09:59  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:40:29 UTC)" (scheduled at 2026-03-06 19:39:59.742486+00:00)
+2026-03-07 01:09:59  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:40:29 UTC)" executed successfully
+2026-03-07 01:10:29  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:40:59 UTC)" (scheduled at 2026-03-06 19:40:29.742486+00:00)
+2026-03-07 01:10:29  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:40:59 UTC)" executed successfully
+2026-03-07 01:10:59  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:41:29 UTC)" (scheduled at 2026-03-06 19:40:59.742486+00:00)
+2026-03-07 01:10:59  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:41:29 UTC)" executed successfully
+2026-03-07 01:11:29  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:41:59 UTC)" (scheduled at 2026-03-06 19:41:29.742486+00:00)
+2026-03-07 01:11:29  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:41:59 UTC)" executed successfully
+2026-03-07 01:11:59  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:42:29 UTC)" (scheduled at 2026-03-06 19:41:59.742486+00:00)
+2026-03-07 01:11:59  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:42:29 UTC)" executed successfully
+2026-03-07 01:12:29  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:42:59 UTC)" (scheduled at 2026-03-06 19:42:29.742486+00:00)
+2026-03-07 01:12:29  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:42:59 UTC)" executed successfully
+2026-03-07 01:12:59  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:43:29 UTC)" (scheduled at 2026-03-06 19:42:59.742486+00:00)
+2026-03-07 01:12:59  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:43:29 UTC)" executed successfully
+2026-03-07 01:13:29  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:43:59 UTC)" (scheduled at 2026-03-06 19:43:29.742486+00:00)
+2026-03-07 01:13:29  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:43:59 UTC)" executed successfully
+2026-03-07 01:13:59  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:44:29 UTC)" (scheduled at 2026-03-06 19:43:59.742486+00:00)
+2026-03-07 01:13:59  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:44:29 UTC)" executed successfully
+2026-03-07 01:14:29  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:44:59 UTC)" (scheduled at 2026-03-06 19:44:29.742486+00:00)
+2026-03-07 01:14:29  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:44:59 UTC)" executed successfully
+2026-03-07 01:14:59  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:45:29 UTC)" (scheduled at 2026-03-06 19:44:59.742486+00:00)
+2026-03-07 01:14:59  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:45:29 UTC)" executed successfully
+2026-03-07 01:15:29  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:45:59 UTC)" (scheduled at 2026-03-06 19:45:29.742486+00:00)
+2026-03-07 01:15:29  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:45:59 UTC)" executed successfully
+2026-03-07 01:15:59  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:46:29 UTC)" (scheduled at 2026-03-06 19:45:59.742486+00:00)
+2026-03-07 01:15:59  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:46:29 UTC)" executed successfully
+2026-03-07 01:16:29  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:46:59 UTC)" (scheduled at 2026-03-06 19:46:29.742486+00:00)
+2026-03-07 01:16:29  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:46:59 UTC)" executed successfully
+2026-03-07 01:16:59  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:47:29 UTC)" (scheduled at 2026-03-06 19:46:59.742486+00:00)
+2026-03-07 01:16:59  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:47:29 UTC)" executed successfully
+2026-03-07 01:17:29  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:47:59 UTC)" (scheduled at 2026-03-06 19:47:29.742486+00:00)
+2026-03-07 01:17:29  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:47:59 UTC)" executed successfully
+2026-03-07 01:17:59  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:48:29 UTC)" (scheduled at 2026-03-06 19:47:59.742486+00:00)
+2026-03-07 01:17:59  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:48:29 UTC)" executed successfully
+2026-03-07 01:18:29  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:48:59 UTC)" (scheduled at 2026-03-06 19:48:29.742486+00:00)
+2026-03-07 01:18:29  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:48:59 UTC)" executed successfully
+2026-03-07 01:18:59  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:49:29 UTC)" (scheduled at 2026-03-06 19:48:59.742486+00:00)
+2026-03-07 01:18:59  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:49:29 UTC)" executed successfully
+2026-03-07 01:19:29  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:49:59 UTC)" (scheduled at 2026-03-06 19:49:29.742486+00:00)
+2026-03-07 01:19:29  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:49:59 UTC)" executed successfully
+2026-03-07 01:19:59  INFO      apscheduler.executors.default — Running job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:50:29 UTC)" (scheduled at 2026-03-06 19:49:59.742486+00:00)
+2026-03-07 01:19:59  INFO      apscheduler.executors.default — Job "Telemetry P1_WARNING Listener (trigger: interval[0:00:30], next run at: 2026-03-06 19:50:29 UTC)" executed successfully
+2026-03-07 01:20:03  INFO      smart_engine.scheduler — [Scheduler] Signal 2 received — shutting down gracefully…
+2026-03-07 01:20:03  INFO      apscheduler.scheduler — Scheduler has been shut down
+2026-03-07 01:20:03  INFO      smart_engine.scheduler — [Scheduler] Stopped.
